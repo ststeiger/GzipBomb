@@ -11,6 +11,8 @@ namespace GzipBomb
 {
     public class Startup
     {
+        // https://stackoverflow.com/questions/30310099/correct-way-to-compress-webapi-post
+        // https://blog.haschek.at/post/f2fda
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
