@@ -16,23 +16,20 @@ namespace GzipBomb
     
     public class Startup
     {
-        
-        
+
+
         // https://stackoverflow.com/questions/30310099/correct-way-to-compress-webapi-post
         // https://blog.haschek.at/post/f2fda
-        
-        
-        
+
         // apt-get install xz-utils
-        
-        
+
+        public IConfiguration Configuration { get; }
+
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
-        
-        
-        public IConfiguration Configuration { get; }
         
         
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -56,7 +53,9 @@ namespace GzipBomb
             }
             
             app.UseStaticFiles();
-            
+            app.UseMiddleware<GzipBombMiddleware>();
+
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

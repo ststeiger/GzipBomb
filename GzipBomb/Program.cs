@@ -21,6 +21,8 @@ namespace GzipBomb
         
         public static void Main(string[] args)
         {
+            GzipBombMiddleware.CreateHugeGzipFile();
+
             BuildWebHost(args).Run();
         }
         
