@@ -97,13 +97,85 @@ namespace GzipBomb
             {
                 // do your stuff here before calling the next middleware in the pipeline
                 System.IO.FileInfo fi = new System.IO.FileInfo(fileName);
-                
+
+                // https://github.com/monperrus/crawler-user-agents/blob/master/crawler-user-agents.json
                 if (context.Request.Headers.ContainsKey("USER-AGENT"))
                 {
-                    string ua = context.Request.Headers["USER-AGENT"];
-                    if (ua != null && ua.ToLowerInvariant().IndexOf("trident") != -1)
+                    string ua = (string)context.Request.Headers["USER-AGENT"] ?? "";
+                    ua = ua.ToLowerInvariant();
+
+                    if (ua != null &&
+                        ua.IndexOf("trident/") != -1 // FU IE 8-11 - MALWARE 
+                        || ua.IndexOf("msie") != -1// FU IE 5-7 - MALWARE 
+                        // || ua.ToLowerInvariant().IndexOf("edge/") != -1 // MALWARE 
+                        || ua.IndexOf("sqlmap/") != -1 // vulnerability scanner 
+                        || ua.IndexOf("masscan/") != -1 // vulnerability scanner 
+                        || ua.IndexOf("nikto/") != -1 // vulnerability scanner 
+                        || ua.IndexOf("java/") != -1 // vulnerability scanner 
+                        || ua.IndexOf("httpclient/") != -1 // vulnerability scanner 
+                        || ua.IndexOf("libfetch/") != -1 // vulnerability scanner 
+                        || ua.IndexOf("libweb/") != -1 // vulnerability scanner 
+                        || ua.IndexOf("go-http-client/") != -1 // vulnerability scanner 
+                        || ua.IndexOf("pcore-http/") != -1 // vulnerability scanner 
+
+                        || ua.IndexOf("nessus") != -1 // vulnerability scanner 
+                        || ua.IndexOf("jorgee") != -1 // vulnerability scanner 
+                        || ua.IndexOf("zmeu") != -1 // vulnerability scanner 
+                        || ua.IndexOf("morfeus") != -1 // vulnerability scanner 
+                        || ua.IndexOf("black.hole") != -1 // vulnerability scanner 
+                        || ua.IndexOf("blackwidow") != -1 // vulnerability scanner 
+                        || ua.IndexOf("bloodhound") != -1 // vulnerability scanner 
+                        || ua.IndexOf("bumblebee") != -1 // vulnerability scanner 
+                        || ua.IndexOf("claw") != -1 // vulnerability scanner 
+                        || ua.IndexOf("grabnet") != -1 // vulnerability scanner 
+                        || ua.IndexOf("grub") != -1 // vulnerability scanner 
+                        || ua.IndexOf("internet.ninja") != -1 // vulnerability scanner 
+                        || ua.IndexOf("yeti") != -1 // vulnerability scanner 
+                        || ua.IndexOf("zeus") != -1 // vulnerability scanner 
+                        || ua.IndexOf("wwwster") != -1 // vulnerability scanner 
+
+                        || ua.IndexOf("libcurl") != -1 // vulnerability scanner 
+                        || ua.IndexOf("libwww-perl") != -1 // vulnerability scanner 
+                        || ua.IndexOf("purebot") != -1 // vulnerability scanner 
+                        || ua.IndexOf("lipperhey") != -1 // vulnerability scanner 
+                        || ua.IndexOf("mama casper") != -1 // vulnerability scanner 
+                        || ua.IndexOf("gold crawler") != -1 // vulnerability scanner 
+
+                        || ua.IndexOf("facebook") != -1 // privacy malware
+                        || ua.IndexOf("linkedin.com") != -1 // privacy malware
+                        || ua.IndexOf("bing.com") != -1 // privacy malware
+                        || ua.IndexOf("msn.com") != -1 // privacy malware
+                        || ua.IndexOf("msnbot") != -1 // privacy malware
+                        || ua.IndexOf("whatsapp") != -1 // privacy malware
+                        || ua.IndexOf("metadata scaper") != -1 // privacy malware
+                        || ua.IndexOf("skypeuripreview") != -1 // bandwidth malware
+                        || ua.IndexOf("httrack") != -1 // bandwidth malware
+                        || ua.IndexOf("mail.ru") != -1 // bandwidth malware
+                        || ua.IndexOf("bingpreview/") != -1 // bandwidth malware
+                        || ua.IndexOf("bing/") != -1 // bandwidth malware
+                        || ua.IndexOf("bingbot/") != -1 // bandwidth malware
+                        || ua.IndexOf("baiduspider/") != -1 // bandwidth malware
+                        || ua.IndexOf("baidu-yunguance") != -1 // bandwidth malware
+                        || ua.IndexOf("slack-imgproxy") != -1 // bandwidth malware
+
+                        || ua.IndexOf("domaincrawler") != -1 // domain-malware
+                        || ua.IndexOf("domain re-animator bot") != -1 // domain-malware
+                        
+                        || ua.IndexOf("jugendschutzprogramm-crawler") != -1 // censorship malware
+
+                        || ua.StartsWith("wp-") // wordpress vulnerability scanner 
+                        || ua.StartsWith("wp/") // wordpress vulnerability scanner 
+                        || ua.StartsWith("wordpress") // wordpress vulnerability scanner 
+
+                        // || ua.ToLowerInvariant().IndexOf("firefox/") != -1 // MALWARE 
+
+                        )
                     {
-                        context.Response.StatusCode = 200;
+                        // context.Response.StatusCode = 200; // Success 
+                        // context.Response.StatusCode = 418; // I'm a teapot
+                        context.Response.StatusCode = 426; // Upgrade Required
+                        // context.Response.StatusCode = 451; // Unavailable For Legal Reasons (RFC 7725)
+
                         context.Response.Headers["Content-Encoding"] = "gzip";
                         context.Response.Headers["Content-Length"] = fi.Length.ToString(System.Globalization.CultureInfo.InvariantCulture);
 
