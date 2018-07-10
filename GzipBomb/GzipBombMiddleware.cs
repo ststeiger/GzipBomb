@@ -184,7 +184,7 @@ namespace GzipBomb
                         using (System.IO.Stream inputStream = System.IO.File.OpenRead(fileName))
                         {
                             int read;
-                            while ((read = inputStream.Read(buffer, 0, buffer.Length)) > 0)
+                            while ((read = await inputStream.ReadAsync(buffer, 0, buffer.Length)) > 0)
                             {
                                 await context.Response.Body.WriteAsync(buffer, 0, read);
                             } // Whend 
